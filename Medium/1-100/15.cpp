@@ -8,27 +8,45 @@ class Solution
 public:
     vector<vector<int>> threeSum(vector<int> &nums)
     {
-        auto answer = vector<vector<int>>{};
-        std::ranges::sort(nums);
-        int n = nums.size();
-        for (int i = 0; i < n - 2; i++)
+        vector<vector<int>> result;
+        if (nums.size() < 3)
         {
-            if (nums[i] > 0)
-            {
-                break;
-            }
+            return result;
+        }
+        sort(nums.begin(), nums.end());
+        for (int i = 0; i < nums.size() - 2; i++)
+        {
+            // 避免第一个数重复
             if (i > 0 && nums[i] == nums[i - 1])
             {
                 continue;
             }
-            int j{i + 1}, k{n - 1};
-            while (j < k)
+            // 转换为两数之和问题
+            int target = -nums[i], left = i + 1, right = nums.size() - 1;
+            while (left < right)
             {
-                if (nums[j] + nums[k] == -nums[i])
+                int sum = nums[left] + nums[right];
+                if (sum == target)
                 {
-                    /* code */
+                    result.push_back({nums[i], nums[left], nums[right]});
+                    // 跳过重复元素
+                    while (left < right && nums[left] == nums[left + 1])
+                        left++;
+                    while (left < right && nums[right] == nums[right - 1])
+                        right--;
+                    left++;
+                    right--;
+                }
+                else if (sum < target)
+                {
+                    left++;
+                }
+                else
+                {
+                    right--;
                 }
             }
         }
+        return result;
     }
 };
